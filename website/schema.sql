@@ -1,8 +1,8 @@
-DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;
 
-CREATE TABLE user(
-    id INTEGER AUTO_INCREMENT,
+CREATE TABLE users(
+    id INTEGER UNIQUE,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     username TEXT NOT NULL,
@@ -12,7 +12,12 @@ CREATE TABLE user(
 
 CREATE TABLE roles(
     role_name TEXT NOT NULL CHECK (role_name IN ('admin', 'librarian', 'student')),
-    username TEXT NOT NULL,
+    username INTEGER NOT NULL,
     FOREIGN KEY (username) REFERENCES user (username),
     PRIMARY KEY (username, role_name)
 );
+
+-- CREATE TABLE needs_clearance(
+--     username TEXT NOT NULL,
+
+-- );

@@ -9,7 +9,7 @@ from website.db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-# Views
+# Views Requiring Provisioning and Authentication
 
 # Register User: Students register right away, Librarian or Admin requests an existing admin
 @bp.route('/register', methods=('GET', 'POST'))
@@ -38,8 +38,12 @@ def register():
             try:
                 if role == 'student':
                     db.execute(
-                        "INSERT INTO user (first_name, last_name, username, password) VALUES (?, ?, ?, ?)",
+                        "INSERT INTO users (first_name, last_name, username, password) VALUES (?, ?, ?, ?)",
                         (first_name, last_name, username, generate_password_hash(password)),
+                    )
+                    db.execute(
+                        'INSERT INTO roles (username, role_name) VALUES (?, ?)',
+                        (username, 'student'),
                     )
                     db.commit()
                 #elif role == 'librarian' | role == 'admin':
@@ -62,8 +66,11 @@ def login():
         db = get_db()
         error = None
         user = db.execute(
-            'SELECT * FROM user WHERE username = ?', (username,)
+            'SELECT * FROM users WHERE username = ?', (username,)
         ).fetchone() 
+        role = db.execute(
+            'SELECT * FROM roles WHERE username = ?', (username,)
+        ).fetchone()
         # fetchone returns one row from query, fetchall returns a list of all results
 
         if user is None:
@@ -73,7 +80,7 @@ def login():
 
         if error is None:
             session.clear()
-            session['user_id'] = user['id']
+            session['user_id'] = user['username']
             return redirect(url_for('index'))
 
         flash(error)
@@ -89,7 +96,10 @@ def load_logged_in_user():
         g.user = None
     else:
         g.user = get_db().execute(
-            'SELECT * FROM user WHERE id = ?', (user_id,)
+            'SELECT * FROM users WHERE username = ?', (user_id,)
+        ).fetchone()
+        g.user_role = get_db().execute(
+            'SELECT * FROM roles WHERE username = ?', (user_id,)
         ).fetchone()
 
 # Logout User

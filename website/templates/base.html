@@ -2,16 +2,20 @@
 <title>{% block title %}{% endblock %} - SJSU Library</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <nav>
-  <h1>SJSU Library</h1>
-  <ul>
+  <h1>
     {% if g.user %}
-      <li><span>{{ g.user['username'] }}</span>
-      <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
+      SJSU Library - {{ g.user['first_name'] }}
     {% else %}
-      <li><a href="{{ url_for('auth.register') }}">Register</a>
-      <li><a href="{{ url_for('auth.login') }}">Log In</a>
+      SJSU Library
     {% endif %}
-  </ul>
+  </h1>
+    {% if g.user %}
+        <a href="{{ url_for('auth.logout') }}">Log Out</a>
+    {% else %}
+        <a href="{{ url_for('auth.login') }}">Log In</a>
+        <br>
+        <a href="{{ url_for('auth.register') }}">Register</a>
+    {% endif %}
 </nav>
 <section class="content">
   <header>
