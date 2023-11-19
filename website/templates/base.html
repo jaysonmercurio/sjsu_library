@@ -4,7 +4,7 @@
 <nav>
   <h1>
     {% if g.user %}
-      SJSU Library - {{ g.user['first_name'] }}
+      <a href="{{ url_for('index') }}">SJSU Library</a> - {{ g.user['first_name'] }}
     {% else %}
       SJSU Library
     {% endif %}

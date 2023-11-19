@@ -36,18 +36,22 @@ def register():
 
         if error is None:
             try:
+                db.execute(
+                    "INSERT INTO users (first_name, last_name, username, password) VALUES (?, ?, ?, ?)",
+                    (first_name, last_name, username, generate_password_hash(password)),
+                )
                 if role == 'student':
                     db.execute(
-                        "INSERT INTO users (first_name, last_name, username, password) VALUES (?, ?, ?, ?)",
-                        (first_name, last_name, username, generate_password_hash(password)),
+                        'INSERT INTO roles (username, role_name, approval) VALUES (?, ?, ?)',
+                        (username, 'student', 1),
                     )
+                elif role == 'librarian' or role == 'admin':
                     db.execute(
-                        'INSERT INTO roles (username, role_name) VALUES (?, ?)',
-                        (username, 'student'),
+                        'INSERT INTO roles (username, role_name, approval) VALUES (?, ?, ?)',
+                        (username, role, 0),
                     )
-                    db.commit()
-                #elif role == 'librarian' | role == 'admin':
-
+                    flash("Registration must be approved before login")
+                db.commit()
             except db.IntegrityError:
                 error = f"User {username} is already registered."
             else:
@@ -70,13 +74,17 @@ def login():
         ).fetchone() 
         role = db.execute(
             'SELECT * FROM roles WHERE username = ?', (username,)
-        ).fetchone()
-        # fetchone returns one row from query, fetchall returns a list of all results
+        ).fetchone() # fetchone returns one row from query, fetchall returns a list of all results
+
 
         if user is None:
             error = 'Incorrect username.'
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
+        else:
+            approval = role['approval']
+            if approval == 0:
+                error = 'Account must be verified. Contact your administrator.'
 
         if error is None:
             session.clear()
@@ -117,3 +125,10 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
+
+def check_auth(role):
+    if g.user_role['role_name'] != role:
+        flash('You do not have permision to view this page.')
+        return False
+    else:
+        return True

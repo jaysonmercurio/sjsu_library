@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h2>
+        {% block title %}
+            {% if g.user_role %}
+                {{ g.user_role['role_name']|capitalize }} Dashboard
+            {% else %}
+                Main Page
+            {% endif %}
+        {% endblock %}
+    </h2>
+{% endblock %}
+
+{% block content %}
+    {% if g.user %}
+        <a href="{{ url_for('user.books') }}">
+            {% if g.user_role['role_name'] == 'student' %}
+                Borrow Books
+            {% elif g.user_role['role_name'] == 'librarian' or
+                    g.user_role['role_name'] == 'admin' %}
+                Manage Books
+            {% endif %}
+        </a>
+        <br>
+        <a href="{{ url_for('user.rooms') }}">
+            {% if g.user_role['role_name'] == 'student' %}
+                Reserve Room
+            {% elif g.user_role['role_name'] == 'librarian' or
+                    g.user_role['role_name'] == 'admin' %}
+                Manage Rooms
+            {% endif %}
+        </a>
+        <br>
+        {% if g.user_role['role_name'] == 'admin' %}
+            <a href="{{ url_for('user.manage_users') }}">Manage Users</a>
+        {% endif %}
+    {% endif %}
+{% endblock %}
