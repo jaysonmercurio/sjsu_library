@@ -5,16 +5,22 @@
 {% endblock %}
 
 {% block content %}
+  <div class="search-container">
+    <form action="/index">
+      <input type="text" placeholder="Search.." name="search">
+      <button type="submit">Search</button>
+    </form>
+  </div>
 
   {% for book in books %}
-    <article class="user">
+    <article class="book">
       <header>
         <div>
           <h1>{{ book['title'] }}</h1>
           <div class="about">By: {{ book['author'] }}</div> 
           <div>ISBN: {{ book['isbn'] }}</div>
         </div>
-        <a class="action" href="{{ url_for('user.books_info', isbn=book['isbn']) }}">More</a>
+        <a class="action" href="{{ url_for('books.book_info', isbn=book['isbn']) }}">More</a>
       </header>
     </article>
     {% if not loop.last %}

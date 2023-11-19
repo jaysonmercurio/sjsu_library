@@ -13,22 +13,12 @@ bp = Blueprint('user', __name__)
 def user():
     return render_template('user/index.html')
 
-@bp.route('/books', methods=('GET', 'POST'))
-@login_required
-def books():
-    db = get_db()
-    books = db.execute(
-        "SELECT isbn, author, quantity "
-        "FROM books" 
-    ).fetchall()
-    return render_template('user/books.html', books=books)
-
 @bp.route('/rooms', methods=('GET', 'POST'))
 @login_required
 def rooms():
     return render_template('user/rooms.html')
 
-# Managing Users------------------------------------------
+# Managing Users------------------------------------------------------------------------------------------
 @bp.route('/manage_users', methods=('GET', 'POST'))
 @login_required
 def manage_users():
@@ -75,6 +65,12 @@ def delete_user(username):
         return redirect(url_for('index'))
 
     db = get_db()
+    # If user has borrowed books, must "return" books back into db
+    db.execute(
+        'UPDATE books SET quantity = quantity + 1 '
+        'WHERE isbn = (SELECT isbn FROM borrowed_by WHERE username = ?)', (username,)
+    )
+    db.execute('DELETE FROM borrowed_by WHERE username = ?', (username,))
     db.execute('DELETE FROM users WHERE username = ?', (username,))
     db.execute('DELETE FROM roles WHERE username = ?', (username,))
     db.commit()

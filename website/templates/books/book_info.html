@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <a href="{{ url_for('books.book_inventory') }}">Return to Books</a>
+  <h1>{% block title %} {{ book['title'] }} {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <article class="book">
+      <header>
+        <div>
+          <h1>By {{ book['author'] }}</h1>
+          <div>ISBN: {{ book['isbn'] }}</div>
+          <div>Quantity: {{ book['quantity'] }} </div>
+        </div>
+        <form action="{{ url_for('books.borrow', isbn=book['isbn']) }}" method="post">
+          <input type="submit" value="Borrow" onlick="return">
+        </form>
+      </header>
+    </article>
+{% endblock %}

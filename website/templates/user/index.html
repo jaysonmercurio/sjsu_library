@@ -14,14 +14,13 @@
 
 {% block content %}
     {% if g.user %}
-        <a href="{{ url_for('user.books') }}">
-            {% if g.user_role['role_name'] == 'student' %}
-                Borrow Books
-            {% elif g.user_role['role_name'] == 'librarian' or
-                    g.user_role['role_name'] == 'admin' %}
-                Manage Books
-            {% endif %}
-        </a>
+        {% if g.user_role['role_name'] == 'student' %}
+            <a href="{{ url_for('books.my_books') }}">My Books</a>
+            <br>
+            <a href="{{ url_for('books.book_inventory') }}">Borrow Books</a>
+        {% elif g.user_role['role_name'] == 'librarian' or g.user_role['role_name'] == 'admin' %}
+            <a href="{{ url_for('books.manage_books') }}">Manage Books</a>
+        {% endif %}
         <br>
         <a href="{{ url_for('user.rooms') }}">
             {% if g.user_role['role_name'] == 'student' %}
