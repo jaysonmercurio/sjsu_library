@@ -26,16 +26,20 @@
             <br>
         {% endif %}
         <h3>Rooms</h3>
-        <a href="{{ url_for('index') }}">
-            {% if g.user_role['role_name'] == 'student' %}
-                Reserve a Room
-            {% elif g.user_role['role_name'] == 'librarian' or
-                    g.user_role['role_name'] == 'admin' %}
-                Manage Rooms
-            {% endif %}
+        <a href="{{ url_for('rooms.my_reservations') }}">My Reservations</a>
+        <br>
+        <a href="{{ url_for('rooms.reserve_room') }}">Reserve a Room</a>
+        
+        {% if g.user_role['role_name'] == 'librarian' or g.user_role['role_name'] == 'admin' %}
+            <br>
+            <a href="{{ url_for('rooms.all_reservations') }}">All Reservations</a>
+            <br>
+            <a href="{{ url_for('rooms.manage_rooms') }}">Manage Rooms</a>
+        {% endif %}
         </a>
         <br>
         {% if g.user_role['role_name'] == 'admin' %}
+            <h3>Users</h3>
             <a href="{{ url_for('user.manage_users') }}">Manage Users</a>
         {% endif %}
     {% endif %}

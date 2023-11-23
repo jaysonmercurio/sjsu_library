@@ -31,6 +31,7 @@ CREATE TABLE books(
 
 CREATE TABLE rooms(
     room_num INTEGER NOT NULL,
+    listed INTEGER(1) NOT NULL DEFAULT 1,
     PRIMARY KEY (room_num)
 );
 
