@@ -127,8 +127,7 @@ def login_required(view):
     return wrapped_view
 
 def check_auth(role):
-    if g.user_role['role_name'] != role:
-        flash('You do not have permision to view this page.')
-        return False
-    else:
+    if g.user_role['role_name'] == role:
         return True
+    else:
+        return False

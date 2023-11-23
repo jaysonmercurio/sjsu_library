@@ -18,7 +18,7 @@
           <div>ISBN: {{ book['isbn'] }}</div>
         </div>
         <form action="{{ url_for('books.return_book', isbn=book['isbn']) }}" method="post">
-          <input type="submit" value="Return" onlick="return">
+          <input type="submit" value="Return Book" onlick="return confirm('Are you sure?');">
         </form>
       </header>
     </article>

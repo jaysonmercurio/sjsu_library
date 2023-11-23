@@ -13,9 +13,19 @@
           <div>ISBN: {{ book['isbn'] }}</div>
           <div>Quantity: {{ book['quantity'] }} </div>
         </div>
-        <form action="{{ url_for('books.borrow', isbn=book['isbn']) }}" method="post">
-          <input type="submit" value="Borrow" onlick="return">
-        </form>
+        {% if g.user_role['role_name'] == 'student' %}
+          <form action="{{ url_for('books.borrow', isbn=book['isbn']) }}" method="post">
+            <input type="submit" value="Borrow" onlick="return">
+          </form>
+        {% elif g.user_role['role_name'] == 'librarian' or g.user_role['role_name'] == 'admin' %}
+          <form action="{{ url_for('books.update_book', isbn=book['isbn']) }}" method="post">
+            <input type="submit" value="Update Book" onlick="return">
+          </form>
+          
+          <form action="{{ url_for('books.remove_book', isbn=book['isbn']) }}" method="post">
+            <input type="submit" value="Remove all copies of Book" onlick="return confirm('Are you sure?');">
+          </form>
+        {% endif %}
       </header>
     </article>
 {% endblock %}

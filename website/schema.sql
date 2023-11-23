@@ -31,7 +31,6 @@ CREATE TABLE books(
 
 CREATE TABLE rooms(
     room_num INTEGER NOT NULL,
-    date_time TEXT,
     PRIMARY KEY (room_num)
 );
 
@@ -47,7 +46,7 @@ CREATE TABLE reserve_room(
     room_num TEXT(17) NOT NULL,
     date_time TEXT NOT NULL,
     username TEXT NOT NULL,
-    FOREIGN KEY (room_num, date_time) REFERENCES rooms (room_num, date_time),
+    FOREIGN KEY (room_num) REFERENCES rooms (room_num),
     FOREIGN KEY (username) REFERENCES users (username),
     PRIMARY KEY (room_num, date_time, username)
 );

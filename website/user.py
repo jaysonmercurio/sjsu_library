@@ -13,16 +13,12 @@ bp = Blueprint('user', __name__)
 def user():
     return render_template('user/index.html')
 
-@bp.route('/rooms', methods=('GET', 'POST'))
-@login_required
-def rooms():
-    return render_template('user/rooms.html')
-
 # Managing Users------------------------------------------------------------------------------------------
 @bp.route('/manage_users', methods=('GET', 'POST'))
 @login_required
 def manage_users():
     if check_auth('admin') == False:
+        flash('You do not have permision to view this page.')
         return redirect(url_for('index'))
     
     db = get_db()
@@ -37,7 +33,9 @@ def manage_users():
 @login_required
 def update_user(username):
     if check_auth('admin') == False:
+        flash('You do not have permision to view this page.')
         return redirect(url_for('index'))
+    
     db = get_db()
     user = db.execute(
         "SELECT u.username, u.first_name, u.last_name, r.role_name, r.approval "
@@ -50,6 +48,7 @@ def update_user(username):
 @login_required
 def approve_user(username):
     if check_auth('admin') == False:
+        flash('You do not have permision to view this page.')
         return redirect(url_for('index'))
     
     db = get_db()
@@ -62,6 +61,7 @@ def approve_user(username):
 @login_required
 def delete_user(username):
     if check_auth('admin') == False:
+        flash('You do not have permision to view this page.')
         return redirect(url_for('index'))
 
     db = get_db()

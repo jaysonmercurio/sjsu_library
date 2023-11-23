@@ -6,10 +6,16 @@
 
 {% block content %}
   <div class="search-container">
-    <form action="/index">
-      <input type="text" placeholder="Search.." name="search">
+    <form action="{{ url_for('books.search') }}" method="post">
+      <input type="text" placeholder="Book Title.." name="search">
       <button type="submit">Search</button>
     </form>
+    {% if search_made %}
+      <br>
+      <form action="{{ url_for('books.book_inventory') }}" method="post">
+        <input type="submit" value="View All Books">
+      </form>
+    {% endif %}
   </div>
 
   {% for book in books %}
