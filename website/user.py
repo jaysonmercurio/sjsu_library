@@ -71,6 +71,7 @@ def delete_user(username):
         'WHERE isbn = (SELECT isbn FROM borrowed_by WHERE username = ?)', (username,)
     )
     db.execute('DELETE FROM borrowed_by WHERE username = ?', (username,))
+    db.execute('DELETE FROM reserve_room WHERE username = ?', (username,))
     db.execute('DELETE FROM users WHERE username = ?', (username,))
     db.execute('DELETE FROM roles WHERE username = ?', (username,))
     db.commit()
